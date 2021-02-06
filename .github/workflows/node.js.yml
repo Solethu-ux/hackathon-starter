@@ -24,8 +24,7 @@ jobs:
   my_job:
    name: deploy to staging
    runs-on: windows-latest windows-2019 macos-latest macos-10.15 ubuntu-latest ubuntu-18.04 ubuntu-16.04
-
-   
+ 
   build:
 
     runs-on: ubuntu-latest ubuntu-18.04 ubuntu-16.04 windows-latest windows-2019 macos-latest macos-10.15 
@@ -36,7 +35,7 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-    name: FlsshBuddy_node
+    name: FlashBuddy_node
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
