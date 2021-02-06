@@ -1,0 +1,77 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  push:
+    branches:
+     - main     
+     - release/*
+        
+  pull_request:
+    branches: 
+    - main
+
+  on:
+  schedule:
+    - cron: "0 2 * * 1-7"
+      
+  on: 
+  workflow_dispatch:
+
+jobs:
+  my_job:
+   name: deploy to staging
+   runs-on: windows-latest windows-2019 macos-latest macos-10.15 ubuntu-latest ubuntu-18.04 ubuntu-16.04
+
+   
+  build:
+
+    runs-on: ubuntu-latest ubuntu-18.04 ubuntu-16.04 windows-latest windows-2019 macos-latest macos-10.15 
+
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    name: FlsshBuddy_node
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: '10.x'
+        
+    git clone https://github.com/hathi11/hackathon-starter.git
+    
+    cd hackathon-starter/
+    
+    - name: install Dependencies 
+     
+      run: npm install
+    jobs:
+      test:
+    name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node_version: ['8', '10', '12']
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+     
+     steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node_version }}   
+        
+   - name: npm install, build and test
+      run: |
+        npm install
+        npm run build --if-present
+        npm test
+    
+  steps:
+- run: npm publish
+  if: github.event == 'push'
